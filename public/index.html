@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./lib/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="./lib/bootstrap.min.js"></script>
     
      <link rel="stylesheet" href="index.css">  
-     <script src="./socket.io.js"></script>
+     <script src="./lib/socket.io.js"></script>
     <script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
    
-    <script src="./jquery-3.4.1.min.js"></script>
+    <script src="./lib/jquery-3.4.1.min.js"></script>
     <script src="./index.js"></script>
  
     <title>Code Share Chinoca</title>
@@ -29,8 +29,8 @@
       <a href="https://github.com/ShorMeneses">GitHub</a>
     </h5>
       <ul class="nav nav-tabs" style="clear: both;">
-        <li class="active"><a data-toggle="tab" href="1">Page 1</a></li>
-        <li><a id="newPage" data-toggle="tab" href="pageAdd">Add new Page</a></li>
+        <li class="nav-item"><a class='active nav-link' data-toggle="tab" href="1">Page 1</a></li>
+        <li><a id="newPage" class="nav-link" data-toggle="tab" href="pageAdd">Add new Page</a></li>
       </ul>
       <div class="parent">
         <div id="editor" class="editor" ></div>

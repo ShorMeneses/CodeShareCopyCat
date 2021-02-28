@@ -7,39 +7,50 @@ $(function () {
   editor.setOption("showPrintMargin", false);
   editor.setOption("highlightActiveLine", true);
   editor.getSession().setUseWorker(false);
-  var socket = io();
+  var socket = io({
+    query: { token: window.location.pathname }
+  });
+  const currRoom=window.location.pathname;
+  console.log("Current Room: "+currRoom);
+if (currRoom == "/"){
+  document.location.href = '/'+randomString(6);
+}
+
   var arrayText = [];
 
   setEventListener($('#newPage'));
 
   $('div#editor').bind('input change paste', function () {
-    var str=("message "+pagIAmat);
-    console.log(str);
-    socket.emit(str, editor.getValue());
+    arrayText[pagIAmat]= editor.getValue();
+    socket.emit('update', arrayText);
+    console.log("Sent an Update");
     return false;
   });
 
   document.querySelector('textarea').addEventListener("keyup", function (ev) {
     if (ev.keyCode === 46 || ev.keyCode === 8) {
-      socket.emit('message ' + pagIAmat, editor.getSession().getValue());
+      arrayText[pagIAmat]= editor.getValue();
+      socket.emit('update', arrayText);
+      console.log("Sent an Update");
     }
   });
 
-  for (var i = 1; i < 11; i++) {
-    socket.on('message ' + i, function (msg) {
+ 
+    socket.on('msgFromSv', function (msg) {
       arrayText = msg;
       setText(pagIAmat);
+      console.log("Recevied an Update");
     });
-  }
+  
 
   socket.on('start', function (msg) {
     arrayText = msg;
     setText(1);
+    console.log("Recevied Start Text");
   })
 
 
   function setText(i) {
-    console.log(arrayText.length);
     var x = editor.selection.getCursor().row;
     var y = editor.selection.getCursor().column;
     editor.setValue(arrayText[i]);
@@ -53,16 +64,16 @@ $(function () {
         var num = parseInt(currPage);
         pagIAmat = num;
         var addPage = $("#newPage").parent().remove();
-        $("ul").append("<li class=\"active\"><a data-toggle=\"tab\" href=" + num + " aria-expanded=\"false\">Page " + num + "</a></li>");
+        $("ul").append("<li class=\"\"><a  class=\"nav-link\" data-toggle=\"tab\" href=" + num + " aria-expanded=\"false\">Page " + num + "</a></li>");
         if (!(num == 10)) {
-          $("ul").append("<li><a id=\"newPage\" data-toggle=\"tab\" href=\"11\">Show new page</a></li>");
+          $("ul").append("<li><a id=\"newPage\" class=\"nav-link\" data-toggle=\"tab\" href=\"11\">Show new page</a></li>");
           setEventListener($("#newPage"));
-          $("ul li").removeClass();
-          $("ul li").last().prev().addClass("active");
+          $("ul li a").removeClass(['active']);
+          $("ul li").last().prev().children().addClass('active')
         } else {
           addPage = undefined;
-          $("ul li").removeClass();
-          $("ul li").last().addClass("active");
+          $("ul li a").removeClass(['active']);
+          $("ul li a").last().addClass("active");
         }
 
         setText(currPage);
@@ -76,5 +87,9 @@ $(function () {
 
     })
   }
+
+  function randomString(length) {
+    return Math.round((Math.pow(36, length + 1) - Math.random() * Math.pow(36, length))).toString(36).slice(1);
+}
 
 });
